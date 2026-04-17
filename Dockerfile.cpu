@@ -32,7 +32,6 @@ RUN pip install "setuptools<81" && PIP_NO_BUILD_ISOLATION=1 pip install --no-bui
 RUN pip install -r /opt/CosyVoice/requirements.cpu.txt
 
 COPY . /opt/CosyVoice
-RUN pip install -e .
 
 RUN mkdir -p /models
 
