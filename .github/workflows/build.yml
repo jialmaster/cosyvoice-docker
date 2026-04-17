@@ -1,0 +1,35 @@
+name: Build CosyVoice CPU
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Clone CosyVoice
+        run: |
+          git clone --recursive https://github.com/FunAudioLLM/CosyVoice.git
+
+      - name: Move Dockerfile
+        run: |
+          mv Dockerfile.cpu CosyVoice/Dockerfile
+
+      - name: Build image
+        run: |
+          cd CosyVoice
+          docker build -t cosyvoice:cpu .
+
+      - name: Save image
+        run: |
+          docker save cosyvoice:cpu -o cosyvoice.tar
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cosyvoice-image
+          path: cosyvoice.tar
