@@ -24,10 +24,10 @@ COPY requirements.txt /opt/CosyVoice/requirements.txt
 RUN pip install --upgrade pip && \
     pip install "setuptools<81" wheel packaging && \
     pip install --index-url https://download.pytorch.org/whl/cpu \
-        torch torchaudio torchvision && \
+        torch==2.3.1 torchaudio==2.3.1 torchvision==0.18.1 && \
     pip install onnxruntime==1.18.0 && \
     grep -Ev '^(deepspeed|onnxruntime-gpu|tensorrt-cu12|tensorrt-cu12-bindings|tensorrt-cu12-libs|torch|torchaudio)==|^--extra-index-url https://download\.pytorch\.org/whl/cu121' /opt/CosyVoice/requirements.txt > /opt/CosyVoice/requirements.cpu.txt && \
-    PIP_NO_BUILD_ISOLATION=1 pip install --no-build-isolation -r /opt/CosyVoice/requirements.cpu.txt
+    pip install -r /opt/CosyVoice/requirements.cpu.txt
 
 COPY . /opt/CosyVoice
 RUN pip install -e .
