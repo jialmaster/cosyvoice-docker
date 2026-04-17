@@ -1,5 +1,4 @@
-cat > Dockerfile.cpu <<'EOF'
-FROM python:3.10-slim
+FROM python:3.10.20-slim-bookworm
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
@@ -22,10 +21,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY requirements.txt /opt/CosyVoice/requirements.txt
 
-RUN pip install --upgrade pip setuptools wheel && \
+RUN pip install --upgrade pip && \
+    pip install "setuptools<81" wheel packaging && \
     pip install --index-url https://download.pytorch.org/whl/cpu \
         torch torchaudio torchvision && \
-    pip install -r /opt/CosyVoice/requirements.txt
+    PIP_NO_BUILD_ISOLATION=1 pip install --no-build-isolation -r /opt/CosyVoice/requirements.txt
 
 COPY . /opt/CosyVoice
 RUN pip install -e .
@@ -35,5 +35,4 @@ RUN mkdir -p /models
 ENV MODEL_DIR=/models/CosyVoice-300M
 EXPOSE 50000
 
-CMD ["/bin/bash", "-lc", "cd /opt/CosyVoice/runtime/python/fastapi && fastapi run --port 50000 server.py"]
-EOF
+CMD ["/bin/bash", "-lc", "cd /opt/CosyVoice/runtime/python/fastapi && fastapi run --host 0.0.0.0 --port 50000 server.py"]
