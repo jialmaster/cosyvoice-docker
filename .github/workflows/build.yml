@@ -23,6 +23,11 @@ jobs:
         run: |
           mv Dockerfile.cpu CosyVoice/Dockerfile
 
+      - name: Show Dockerfile key lines
+        run: |
+          cd CosyVoice
+          sed -n '20,40p' Dockerfile
+
       - name: Build image
         run: |
           cd CosyVoice
